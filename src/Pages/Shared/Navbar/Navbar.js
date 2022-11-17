@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../SignUp/AuthProvider";
 
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+
+  const handleLogIut = () => {
+    logOut().then().catch();
+  };
+
   const menuItems = (
     <React.Fragment>
       <li>
@@ -13,15 +20,24 @@ const Navbar = () => {
       <li>
         <Link to="/appointment">Appointment</Link>
       </li>
-      <li>
-        <Link to="/reviews">Reviews</Link>
-      </li>
+
       <li>
         <Link to="/contact">Contact Us</Link>
       </li>
-      <li>
-        <Link to="/login">Login</Link>
-      </li>
+      {user?.uid ? (
+        <>
+          <li>
+            <Link to="/dashboard">DashBoard</Link>
+          </li>
+          <li>
+            <button onClick={handleLogIut}>Log Out</button>
+          </li>
+        </>
+      ) : (
+        <li>
+          <Link to="/login">Login</Link>
+        </li>
+      )}
     </React.Fragment>
   );
 
@@ -57,7 +73,6 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal p-0">{menuItems}</ul>
       </div>
-      
     </div>
   );
 };
