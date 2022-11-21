@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import useToken from "../../hooks/useToken";
 import { AuthContext } from "./AuthProvider";
 
 const SignUp = () => {
@@ -11,18 +12,23 @@ const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { createUser, updateUser, googleCreate, loading } =
-    useContext(AuthContext);
+  const { createUser, updateUser, googleCreate } = useContext(AuthContext);
   const [signUpError, setSignUpError] = useState("");
   const googleProvider = new GoogleAuthProvider();
   const navigate = useNavigate();
+  const [createdUserEmail, setCreatedUserEmail] = useState("");
+  const [token] = useToken(createdUserEmail);
+
+  if (token) {
+    navigate("/");
+  }
 
   const handleSignUp = (data) => {
     // console.log(data);
     setSignUpError("");
     createUser(data.email, data.password)
       .then((result) => {
-        const user = result.user;
+        // const user = result.user;
         // console.log(user);
         toast("User created Successfully!");
         const userInfo = {
@@ -30,7 +36,7 @@ const SignUp = () => {
         };
         updateUser(userInfo)
           .then(() => {
-            navigate('/')
+            saveUser(data.name, data.email);
           })
           .catch((error) => console.error(error));
       })
@@ -40,11 +46,28 @@ const SignUp = () => {
       });
   };
 
+  const saveUser = (name, email) => {
+    const user = { name, email };
+    fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        setCreatedUserEmail(email);
+      });
+  };
+
   const handleGoogle = () => {
     googleCreate(googleProvider)
       .then((result) => {
         const user = result.user;
         console.log(user);
+        navigate("/");
       })
       .catch((err) => console.error(err));
   };

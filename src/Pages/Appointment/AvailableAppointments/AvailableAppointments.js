@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 import AppointmentOption from "./AppointmentOption";
 import BookingModal from "../BookingModal/BookingModal";
@@ -8,17 +8,21 @@ import Loading from "../../Shared/Loading/Loading";
 const AvailableAppointments = ({ selectedDate }) => {
   // const [AppointmentOptions, setAppointmentOptions] = useState([]);
   const [treatment, setTreatment] = useState(null);
-  const date = format(selectedDate,"PP");
-  const { data: appointmentOptions = [],refetch,isLoading } = useQuery({
-    queryKey: ["doctorsAppointmentOptions",date],
+  const date = format(selectedDate, "PP");
+  const {
+    data: appointmentOptions = [],
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["doctorsAppointmentOptions", date],
     queryFn: () =>
-      fetch(`http://localhost:5000/doctorsAppointmentOptions?date=${date}`).then((res) =>
-        res.json()
-      ),
+      fetch(
+        `http://localhost:5000/v2/doctorsAppointmentOptions?date=${date}`
+      ).then((res) => res.json()),
   });
 
   if (isLoading) {
-    return <Loading></Loading>
+    return <Loading></Loading>;
   }
 
   // useEffect(() => {

@@ -3,22 +3,30 @@ import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../SignUp/AuthProvider";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useToken from "../../hooks/useToken";
 
 const Login = () => {
-  const { signIn, googleCreate, resetPassword, loading } =
-    useContext(AuthContext);
+  const { signIn, googleCreate } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
   const googleProvider = new GoogleAuthProvider();
+  const [loginError, setLoginError] = useState("");
+  const [pass, setPass] = useState("password");
+  const [loginUserEmail, setLoginUserEmail] = useState("");
+  const [token] = useToken(loginUserEmail);
 
   const from = location.state?.from?.pathname || "/";
+
+  if (token) {
+    navigate(from, { replace: true });
+  }
 
   const {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const [loginError, setLoginError] = useState("");
 
   const handleLogin = (data) => {
     console.log(data);
@@ -27,7 +35,7 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
-        navigate(from, { replace: true });
+        setLoginUserEmail(data.email);
       })
       .catch((err) => {
         console.error(err.message);
@@ -80,12 +88,12 @@ const Login = () => {
               </p>
             )}
           </div>
-          <div className="form-control w-full">
+          <div className="form-control w-full relative">
             <label className="label">
               <span className="label-text">Password</span>
             </label>
             <input
-              type="password"
+              type={pass}
               {...register("password", {
                 required: "Password is required",
                 minLength: {
@@ -95,18 +103,35 @@ const Login = () => {
               })}
               className="input input-bordered w-full"
             />
+            <p
+              onClick={() => setPass("text")}
+              className={`${
+                pass === "text" ? "hidden" : "block"
+              } absolute right-2 bottom-12 cursor-pointer`}
+            >
+              <FaEye />
+            </p>
+            <p
+              onClick={() => setPass("password")}
+              className={`${
+                pass === "password" ? "hidden" : "block"
+              } absolute right-2 bottom-12 cursor-pointer`}
+            >
+              <FaEyeSlash />
+            </p>
             {errors.password && (
               <p className="text-red-600" role="alert">
                 {errors.password?.message}
               </p>
             )}
             <label className="label">
-              <span
+              <Link
+                to="/forgetEmail"
                 // onClick={handlePassword}
                 className="label-text-alt cursor-pointer hover:text-blue-700 hover:underline"
               >
                 Forget Password?
-              </span>
+              </Link>
             </label>
           </div>
           <input
