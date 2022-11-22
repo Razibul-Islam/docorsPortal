@@ -66,7 +66,7 @@ const SignUp = () => {
     googleCreate(googleProvider)
       .then((result) => {
         const user = result.user;
-        console.log(user);
+        // console.log(user);
         navigate("/");
       })
       .catch((err) => console.error(err));

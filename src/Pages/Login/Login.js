@@ -29,12 +29,12 @@ const Login = () => {
   } = useForm();
 
   const handleLogin = (data) => {
-    console.log(data);
+    // console.log(data);
     setLoginError("");
     signIn(data.email, data.password)
       .then((result) => {
         const user = result.user;
-        console.log(user);
+        // console.log(user);
         setLoginUserEmail(data.email);
       })
       .catch((err) => {
@@ -51,7 +51,7 @@ const Login = () => {
     googleCreate(googleProvider)
       .then((result) => {
         const user = result.user;
-        console.log(user);
+        // console.log(user);
       })
       .catch((err) => console.error(err));
   };
