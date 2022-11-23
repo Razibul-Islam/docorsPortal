@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const BookingModal = ({ treatment, setTreatment, selectedDate, refetch }) => {
   const date = format(selectedDate, "PP");
-  const { name, slots } = treatment;
+  const { name, slots, price } = treatment;
   const { user } = useContext(AuthContext);
 
   const handleBooking = (event) => {
@@ -23,9 +23,10 @@ const BookingModal = ({ treatment, setTreatment, selectedDate, refetch }) => {
       slot,
       email,
       phone,
+      price,
     };
     // console.log(booking);
-    fetch("http://localhost:5000/bookings", {
+    fetch("https://doctors-portal-server-three-nu.vercel.app/bookings", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -40,7 +41,7 @@ const BookingModal = ({ treatment, setTreatment, selectedDate, refetch }) => {
           toast.success("Booking Confirmed");
           refetch();
         } else {
-          toast.error(data.message)
+          toast.error(data.message);
         }
       });
   };

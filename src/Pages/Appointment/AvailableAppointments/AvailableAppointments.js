@@ -17,7 +17,7 @@ const AvailableAppointments = ({ selectedDate }) => {
     queryKey: ["doctorsAppointmentOptions", date],
     queryFn: () =>
       fetch(
-        `http://localhost:5000/v2/doctorsAppointmentOptions?date=${date}`
+        `https://doctors-portal-server-three-nu.vercel.app/v2/doctorsAppointmentOptions?date=${date}`
       ).then((res) => res.json()),
   });
 
@@ -26,7 +26,7 @@ const AvailableAppointments = ({ selectedDate }) => {
   }
 
   // useEffect(() => {
-  //   fetch("http://localhost:5000/doctorsAppointmentOptions")
+  //   fetch("https://doctors-portal-server-three-nu.vercel.app/doctorsAppointmentOptions")
   //     .then((res) => res.json())
   //     .then((data) => setAppointmentOptions(data));
   // }, []);

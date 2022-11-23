@@ -19,11 +19,14 @@ const ManageDoctors = () => {
     queryKey: ["doctors"],
     queryFn: async () => {
       try {
-        const res = await fetch(`http://localhost:5000/doctors`, {
-          headers: {
-            authorization: `bearer ${localStorage.getItem("accessToken")}`,
-          },
-        });
+        const res = await fetch(
+          `https://doctors-portal-server-three-nu.vercel.app/doctors`,
+          {
+            headers: {
+              authorization: `bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
         const data = await res.json();
         return data;
       } catch (error) {
@@ -34,16 +37,19 @@ const ManageDoctors = () => {
 
   const handleDelete = (doctor) => {
     // console.log(doctor);
-    fetch(`http://localhost:5000/doctors/${doctor._id}`, {
-      method: "DELETE",
-      headers: {
-        authorization: `bearer ${localStorage.getItem("accessToken")}`,
-      },
-    })
+    fetch(
+      `https://doctors-portal-server-three-nu.vercel.app/doctors/${doctor._id}`,
+      {
+        method: "DELETE",
+        headers: {
+          authorization: `bearer ${localStorage.getItem("accessToken")}`,
+        },
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.deletedCount > 0) {
-        //   console.log(data);
+          //   console.log(data);
           toast.success("Doctor Deleted SuccessFully");
           refetch();
         }

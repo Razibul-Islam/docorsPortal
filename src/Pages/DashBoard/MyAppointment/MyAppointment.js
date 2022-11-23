@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import Loading from "../../Shared/Loading/Loading";
 import { AuthContext } from "../../SignUp/AuthProvider";
 
 const MyAppointment = () => {
   const { user } = useContext(AuthContext);
 
-  const url = `http://localhost:5000/bookings?email=${user?.email}`;
-  const { data: bookings = [],isLoading } = useQuery({
+  const url = `https://doctors-portal-server-three-nu.vercel.app/bookings?email=${user?.email}`;
+  const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["bookings", user?.email],
     queryFn: async () => {
       const res = await fetch(url, {
@@ -19,9 +20,9 @@ const MyAppointment = () => {
       return data;
     },
   });
-  
+
   if (isLoading) {
-    return <Loading></Loading>
+    return <Loading></Loading>;
   }
 
   return (
@@ -36,6 +37,7 @@ const MyAppointment = () => {
               <th>Treatment</th>
               <th>Data</th>
               <th>Time</th>
+              <th>Payment</th>
             </tr>
           </thead>
           <tbody>
@@ -46,6 +48,16 @@ const MyAppointment = () => {
                 <td>{booking.treatment}</td>
                 <td>{booking.appointmentDate}</td>
                 <td>{booking.slot}</td>
+                <td>
+                  {booking.price && !booking.paid && (
+                    <Link to={`/dashboard/payment/${booking._id}`}>
+                      <button className="btn btn-primary btn-xs">Pay</button>
+                    </Link>
+                  )}
+                  {booking.price && booking.paid && (
+                    <span className="btn btn-success btn-xs">Paid</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
